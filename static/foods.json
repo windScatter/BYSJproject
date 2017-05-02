@@ -1,0 +1,22 @@
+{
+  "foods": [
+    {
+      "id": "001",
+      "image": "fuck",
+      "name": "苹果",
+      "price": "30"
+    },
+    {
+      "id": "002",
+      "image": "you",
+      "name": "橘子",
+      "price": "21"
+    },
+    {
+      "id": "003",
+      "image": "man",
+      "name": "香蕉",
+      "price": "98"
+    }
+  ]
+}
