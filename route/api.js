@@ -2,7 +2,6 @@ var fs = require('fs');
 var url = require('url');
 var qs = require('querystring');
 var foods = require('../model/foods')();
-// var detail = require('../model/detail')();
 
 var getHandler = {};
 var postHandler = {};
@@ -17,7 +16,6 @@ getHandler['/'] = function(req, res){
                     ${food[i].image}><h1>${food[i].name}</h1><h2>${food[i].price}</h2></div>`;
     }
 
-    res.writeHead('200', {"Content-Type": "text/html"});
     fs.readFile(__dirname + '/../views/index.html', function(err, data){
         if(err){
             console.log(err);
@@ -34,7 +32,6 @@ getHandler['/detail'] = function(req, res){
     var query = qs.parse(url.parse(req.url).query);
     var foodDetail = detail.getDetail(query.id);
 
-    res.writeHead('200', {"Content-Type": "text/html"});
     fs.readFile(__dirname + '/../views/detail.html', function(err, data) {
         //动态渲染模板
         res.end(data.toString().replace('{{image}}', foodDetail.image))
@@ -43,22 +40,44 @@ getHandler['/detail'] = function(req, res){
             .replace('{{price}}', foodDetail.price);
     });
 };
+//注册
+getHandler['/resgiter'] = function(req, res){
+    fs.readFile(__dirname + '/../views/resgiter.html', function(err, data) {
+      //动态渲染模板
+      if(err){
+          console.log(err);
+          res.end();
+      }else{
+          res.end(data.toString());
+      }
+    });
+};
+
 
 //404响应，找不到页面
 getHandler['/404'] = function(req, res){
-    res.writeHead('404', {"Content-Type": "text/plain"});
     res.end("404 NOT FOUND");
 };
 
-// post请求的处理方法示例
-postHandler['/'] = function(res, data) {
+// 登录处理
+postHandler['/fuck'] = function(res, data) {
+    if(data.user != 'lbl' || data.password != '3113007975'){
+        res.write('账号或者密码错误或者都错误！！！');
+        res.end();
+    }else{
+        res.writeHead(301, {'Location': '/'});
+        console.log(res._header);
+        res.end();
+    }
+
     // do something
-};
+}
 
 // get请求
 function get(req, res) {
     var reqUrl = url.parse(req.url);
-    console.log(reqUrl.pathname);
+    res.writeHead('200', {"Content-Type": "text/html"});
+    // console.log(reqUrl.pathname);
     if (typeof getHandler[reqUrl.pathname] === "function") {
         getHandler[reqUrl.pathname](req, res);
     } else {
@@ -75,7 +94,9 @@ function post(req, res) {
             postData += data;
         });
         req.on('end', function(){
-            postData = querystring.parse(postData);
+            res.writeHead('200', {"Content-Type": "text/html"});
+            postData = qs.parse(postData);
+            console.log(postData);
             postHandler[reqUrl.pathname](res, postData);
         });
     } else {
@@ -87,4 +108,5 @@ function post(req, res) {
 module.exports = {
     get: get,
     post: post
-};
+}
+

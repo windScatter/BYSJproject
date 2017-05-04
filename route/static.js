@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 
+//设计拓展名列表
 var opts = {
     ".css": "text/css",
     ".js": "text/js",
@@ -10,8 +11,10 @@ var opts = {
     ".gif": "image/gif"
 };
 
+//根据文件拓展名处理
 function get(pathname, res){
     if(fs.existsSync(pathname)){
+        console.log('on this method');
         var extname = path.extname(pathname);
         res.writeHead('200', {'Content-Type': opts[extname]});
         fs.readFile(pathname, function(err, data){
@@ -36,4 +39,6 @@ function isImage(extname){
     return false;
 }
 
-module.exports = get;
+module.exports = {
+    get: get
+};

@@ -1,0 +1,34 @@
+源代码版本控制系统介绍
+源代码版本控制系统是软件开发必不可少的一个手段，在个人开发特别是团队开发中充当非常重要的角色，它的作用主要是用来记录若干源码文件
+的内容变化，方便以后用来查看或者修改特定版本代码，版本控制的好处是可以支持多人开发，支持异地开发，在版本控制系统可以清楚的看到每
+个版本的变化，知道哪些程序员修改或增加了哪些文件，通过对比找出导致出现问题的所在或者某些功能缺陷，方便程序员通过保存的系统代码的
+所有修订版本来查找bug，并且，版本控制系统的好处在于它可以将一个或者多个代码文件恢复到以前的某个状态甚至可以把整个工程恢复到过去的
+某个版本状态，本文所用的git便是其中一种。
+git 是用于 Linux内核开发的版本控制工具。与常用的版本控制工具 CVS, Subversion 等不同，它采用了分布式版本库的方式，不必服务器端软件
+支持（wingeddevil注：这得分是用什么样的服务端，使用http协议或者git协议等不太一样。并且在push和pull的时候和服务器端还是有交互的），
+使源代码的发布和交流极其方便。 Git 的速度很快，这对于诸如 Linux kernel 这样的大项目来说自然很重要。 Git 最为出色的是它的合并跟踪
+能力。
+git的使用
+配置git
+首先创建一个git账号，并创建一个自命名仓库
+然后在本地下载并安装git
+在本地桌面右键或者使用快捷方式打开git bash here进入命令行模式
+在命令行中输入ssh-keygen -t rsa -C "582458063@qq.com"，引号内为自己的注册邮箱，创建本地ssh key，为github提供同步标识，使用默认创建，
+在本地得到id_sra.pub文件
+用编辑器打开id_sra.pub文件，复制里面的内容到github上setting的SSH Keys上，输入自定义标题
+回到本地git命令行，输入ssh -T git@github.com验证SSH Keys是否成功，若在continue对话中输入yes，打印出You’ve successfully authenticated,
+ but GitHub does not provide shell access即表示验证成功
+继续在命令行中输入git config --global user.name "windScatter" 和git config --global user.email "582458063@qq.com"设置用户名和邮箱
+仓库初始化
+在要上传代码的文件夹中右键选择git bash here，输入git init，创建本地git，可以看到该文件夹出现.git文件夹，代表初始成功
+在命令行输入git remote add origin git@github.com:windScatter/BYSJproject.git给远程仓库添加地址，即把文件夹和仓库连接起来
+然后使用pull命令把仓库里的东西同步到本地
+代码文件上传
+输入git add -A把所有文件上传，也可以git add 文件 把某个文件上传
+使用git commit -m + “注释”把代码进行提交
+最后用git push 把代码推到github仓库
+
+github是一个面向开源及私有软件项目的托管平台，因为只支持 Git 作为唯一的版本库格式进行托管，故名 GitHub，它由github公司，曾称Logical
+Awesome的开发者Chris Wanstrath、PJ Hyett和Tom Preston-Werner使用Ruby on Rails编写，github同时提供付费账户和为开源项目提供的免费账户。
+作为一个分布式的版本控制系统，在git中没有主库的概念，每一份复制出的仓库都可以独立使用，任何两个仓库之间的差异都可以合并到一起。github
+的独特地方在于对项目的分支管理非常简单，具有很高的操作性，这点在前面已经提到，同时，如果需要为一个项目贡献代码也是一件很容易的事情。
