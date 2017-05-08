@@ -1,3 +1,5 @@
-moudule.exports = {
+module.exports = {
+    data: {
 
+    }
 }

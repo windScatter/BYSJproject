@@ -1,12 +1,21 @@
-module.exports = function(req, res){
-    this.Cookies = {};
-    //解析cookie
-    if(req.headers.cookie){
-        req.headers.cookie.split(';').forEach(function( Cookie ) {
-            var parts = Cookie.split('=');
-            this.Cookies[ parts[ 0 ].trim() ] = ( parts[ 1 ] || '' ).trim();
-        });
-    }
+var http = require('http');
+var url = require('url');
+function Cookie(req, res){
+    // //解析cookie
+    function  handleCookie(){
+        var arr= [];
+        var obj = {};
+        if(req.headers.cookie){
+            arr = req.headers.cookie.split(",");
+        }
+        for(index in arr){
+            var parts = arr[index].split('=');
+            obj[parts[0].trim()] = (parts[1]||'').trim();
+        }
+        // console.log(obj);
+        return obj;
+    };
+    this.Cookies = handleCookie();
 
     //获取cookie
     this.getValue = function(key){
@@ -21,12 +30,13 @@ module.exports = function(req, res){
     };
     //设置获取sid
     this.getSessionId= function(){
-        return this.Cookies["sid"];//不存在sid则自动生成一个
+        // console.log(this.Cookies["sid"]);
+        return this.Cookies["sid"];
     };
     this.setSessionId= function(sid){
         this.Cookies["sid"] = sid;
     }
-    //写入输出流
+    //写入cookie
     this.flush = function(){
         var arr = [];
         for(key in this.Cookies){
@@ -36,3 +46,7 @@ module.exports = function(req, res){
         res.setHeader('Set-Cookie',arr);
     }
 }
+
+module.exports = {
+    Cookie: Cookie
+};

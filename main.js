@@ -8,7 +8,6 @@ var staticFile = /\/public\/[a-zA-z0-9]*\.(jpg|png|gif|css|js)/;
 
 http.createServer(function(req, res){
     var pathname = url.parse(req.url).pathname;
-    console.log(staticFile.test(pathname));
     if(staticFile.test(pathname)){   //静态文件请求交由static处理
         static.get(__dirname + pathname, res);
     }else if(req.method == 'POST'){  //处理普通post请求

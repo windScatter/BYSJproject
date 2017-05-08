@@ -2,18 +2,27 @@ var fs = require('fs');
 var url = require('url');
 var qs = require('querystring');
 var foods = require('../model/foods')();
+var Cookie = require('../module/cookie').Cookie;
+var Session = require('../module/session').Session;
 
 var getHandler = {};
 var postHandler = {};
 
 //处理对主页的请求
 getHandler['/'] = function(req, res){
+    var session = new Session(req, res);
+    var cookie = new Cookie(req, res);
+    if(cookie.getValue("isVisit") != 1){
+        res.writeHead(301, {'Location': '/resgiter'});
+        res.end(console.log('请登录！！'));
+    };
+    var user = session.getValue("User") || "SomeGay";
     var foodMenu = "";
     //拼装首页数据
     var food = foods.getAllFoods();
     for(var i = 0; i< food.length; i++){
-        foodMenu = `<div class="food-card" id=${food[i].id}><img src=
-                    ${food[i].image}><h1>${food[i].name}</h1><h2>${food[i].price}</h2></div>`;
+        foodMenu = `<div class="food-card" id=${food[i].id}><p>欢迎您，${user}</p>
+                    <h1>${food[i].name}</h1><h2>${food[i].price}</h2></div>`;
     }
 
     fs.readFile(__dirname + '/../views/index.html', function(err, data){
@@ -60,13 +69,21 @@ getHandler['/404'] = function(req, res){
 };
 
 // 登录处理
-postHandler['/fuck'] = function(res, data) {
-    if(data.user != 'lbl' || data.password != '3113007975'){
+postHandler['/signIn'] = function(req, res, data) {
+    if(data.user != 'lbl' || data.password != '1'){
+        res.writeHead('200', {"Content-Type": "text/html"});
         res.write('账号或者密码错误或者都错误！！！');
         res.end();
     }else{
+        var session = new Session(req, res);
+        var today = new Date();
+        var time = today.getTime() + 60*1000;
+        var time2 = new Date(time);
+        var timeObj = time2.toGMTString();
+        session.setValue("User",data.user);
+        session.setValue("Password",data.password);
+        res.setHeader('Set-Cookie',`isVisit=1,sid=3268135;path="/signIn";Expires=${timeObj};httpOnly=true`);
         res.writeHead(301, {'Location': '/'});
-        console.log(res._header);
         res.end();
     }
 
@@ -94,10 +111,9 @@ function post(req, res) {
             postData += data;
         });
         req.on('end', function(){
-            res.writeHead('200', {"Content-Type": "text/html"});
             postData = qs.parse(postData);
-            console.log(postData);
-            postHandler[reqUrl.pathname](res, postData);
+            // console.log(postData);
+            postHandler[reqUrl.pathname](req, res, postData);
         });
     } else {
         getHandler["/404"](req, res);
