@@ -8,14 +8,19 @@ var Session = require('../module/session').Session;
 var getHandler = {};
 var postHandler = {};
 
+getHandler['/test'] = function(req, res){
+    res.end('hello world,lbl!')
+}
+
 //处理对主页的请求
 getHandler['/'] = function(req, res){
     var session = new Session(req, res);
     var cookie = new Cookie(req, res);
-    if(cookie.getValue("isVisit") != 1){
+    if(cookie.getValue("sid") == undefined){
         res.writeHead(301, {'Location': '/resgiter'});
         res.end(console.log('请登录！！'));
     };
+    console.log(session.data);
     var user = session.getValue("User") || "SomeGay";
     var foodMenu = "";
     //拼装首页数据
@@ -80,8 +85,6 @@ postHandler['/signIn'] = function(req, res, data) {
         var time = today.getTime() + 60*1000;
         var time2 = new Date(time);
         var timeObj = time2.toGMTString();
-        session.setValue("User",data.user);
-        session.setValue("Password",data.password);
         res.setHeader('Set-Cookie',`isVisit=1,sid=3268135;path="/signIn";Expires=${timeObj};httpOnly=true`);
         res.writeHead(301, {'Location': '/'});
         res.end();

@@ -6,8 +6,8 @@ function Session(req,res){
             temp = {values:{},time:new Date().getTime()};
             sessionData.data[sid] = temp;
         }else{
-            // console.log("has");
-            temp = sessionData.data[sid];
+            temp = {values:sessionData.data[sid],time:new Date().getTime()};
+            console.log(temp);
         }
         return temp.values;
     };

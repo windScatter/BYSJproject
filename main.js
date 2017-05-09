@@ -15,6 +15,6 @@ http.createServer(function(req, res){
     }else{  //处理普通get请求
         api.get(req, res);
     }
-}).listen(8080);
+}).listen(3000);
 
-console.log('server run on http://localhost:8080/');
+console.log('server run on http://localhost:3000/');
